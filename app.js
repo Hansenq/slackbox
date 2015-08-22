@@ -53,6 +53,7 @@ app.use('/store', function(req, res, next) {
 });
 
 app.post('/store', function(req, res) {
+  var webhook_url = process.env.SLACK_HOOK_PATH;
   spotifyApi.refreshAccessToken()
     .then(function(data) {
       spotifyApi.setAccessToken(data.body['access_token']);
@@ -81,7 +82,7 @@ app.post('/store', function(req, res) {
               });
               var options = {
                 host: 'hooks.slack.com',
-                path: process.env.SLACK_HOOK_PATH,
+                path: webhook,
                 method: 'POST',
                 headers: {
                   'Content-Length': postOptions.length
