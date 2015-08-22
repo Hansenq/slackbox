@@ -82,7 +82,7 @@ app.post('/store', function(req, res) {
               });
               var options = {
                 host: 'hooks.slack.com',
-                path: webhook,
+                path: webhook_url,
                 method: 'POST',
                 headers: {
                   'Content-Length': postOptions.length
