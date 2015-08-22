@@ -3,6 +3,8 @@ var bodyParser    = require('body-parser');
 var request       = require('request');
 var dotenv        = require('dotenv');
 var SpotifyWebApi = require('spotify-web-api-node');
+var http          = require('http');
+var querystring   = require('querystring');
 
 dotenv.load();
 
@@ -72,6 +74,24 @@ app.post('/store', function(req, res) {
           var track = results[0];
           spotifyApi.addTracksToPlaylist(process.env.SPOTIFY_USERNAME, process.env.SPOTIFY_PLAYLIST_ID, ['spotify:track:' + track.id])
             .then(function(data) {
+              
+              var publicMessage = req.body.user_name + ' added *' + track.name + '* by *' + track.artists[0].name + '* to the playlist!';
+              var postOptions = querystring.stringify({
+                'payload': publicMessage
+              });
+              var options = {
+                host: 'hooks.slack.com',
+                path: process.env.SLACK_HOOK_PATH,
+                method: 'POST',
+                headers: {
+                  'Content-Length': postOptions.length
+                }
+              };
+              var req = http.request(options, func() {
+              });
+              req.write(postOptions);
+              req.end();
+              
               return res.send('Track added: *' + track.name + '* by *' + track.artists[0].name + '*');
             }, function(err) {
               return res.send(err.message);
