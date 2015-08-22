@@ -87,7 +87,7 @@ app.post('/store', function(req, res) {
                   'Content-Length': postOptions.length
                 }
               };
-              var req = http.request(options, func() {
+              var req = http.request(options, function() {
               });
               req.write(postOptions);
               req.end();
